@@ -1,0 +1,216 @@
+:root {
+  --bg: #f8f9fa;              /* nền trắng xám nhạt */
+  --fg: #111;                 /* chữ đen */
+  --muted: #666;              /* chữ phụ */
+  --pri: #222;                /* đen đậm (nút chính) */
+  --pri-light: #555;          /* xám đậm hover */
+  --card-bg: #fff;            /* thẻ trắng */
+  --card-hover: #f0f0f0;      /* hover nhạt */
+  --bd: #ccc;                 /* viền xám nhạt */
+}
+
+* { box-sizing: border-box; margin:0; padding:0; }
+html, body { height: 100%; }
+
+body {
+  font-family: 'Segoe UI', Roboto, sans-serif;
+  color: var(--fg);
+  background: var(--bg);
+  line-height: 1.5;
+}
+
+/* Links */
+a { color: var(--pri); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* Header & Footer */
+header {
+  display:flex; align-items:center; gap:12px;
+  padding:12px 16px;
+  background:#fff;
+  border-bottom:1px solid var(--bd);
+  position:sticky; top:0; z-index:10;
+}
+header a { color:var(--fg); font-weight:500; }
+header a:hover { color:var(--pri-light); }
+header nav a { margin-right:12px; }
+
+footer {
+  margin-top:32px; padding:20px 16px;
+  background:#fff;
+  border-top:1px solid var(--bd);
+  text-align:center; color:var(--muted);
+}
+
+/* Layout */
+.container { max-width:1100px; margin:16px auto; padding:0 16px; }
+.grid { display:grid; gap:16px; }
+.grid.cols-3 { grid-template-columns:repeat(3,1fr); }
+.grid.cols-4 { grid-template-columns:repeat(4,1fr); }
+@media (max-width: 900px) {
+  .grid.cols-3 { grid-template-columns: 1fr; }
+  .grid.cols-4 { grid-template-columns: 1fr 1fr; }
+}
+
+/* Card & Product */
+.card {
+  background:var(--card-bg);
+  border:1px solid var(--bd);
+  border-radius:10px;
+  padding:12px;
+  transition: background .2s ease;
+}
+.card:hover { background:var(--card-hover); }
+.product { display:flex; flex-direction:column; gap:8px; }
+.price s { color:var(--muted); margin-right:6px; }
+.badge {
+  display:inline-block;
+  border:1px solid var(--pri-light);
+  color:var(--pri);
+  padding:2px 8px;
+  border-radius:999px;
+  font-size:12px;
+}
+
+/* Forms & Inputs */
+input, select, button {
+  padding:10px 12px;
+  border-radius:8px;
+  border:1px solid var(--bd);
+  background:#fff;
+  color:var(--fg);
+}
+input::placeholder { color:#888; }
+button {
+  background:var(--pri);
+  color:#fff;
+  border:none;
+  cursor:pointer;
+  transition:background .2s ease;
+}
+button:hover { background:var(--pri-light); }
+button.ghost {
+  background:transparent;
+  color:var(--pri);
+  border:1px solid var(--pri);
+}
+button.ghost:hover {
+  background:var(--pri);
+  color:#fff;
+}
+
+/* Tables */
+table { width:100%; border-collapse:collapse; color:var(--fg); }
+th, td { border-bottom:1px solid var(--bd); padding:10px 8px; text-align:left; }
+
+/* Headings */
+h1 { margin:10px 0 12px; color:var(--pri); }
+h2, h3 { color:var(--pri-light); }
+
+/* Utilities */
+form.inline { display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+.search { margin-left:auto; display:flex; gap:8px; align-items:center; }
+.search input { min-width:260px; }
+.row { display:flex; gap:16px; flex-wrap:wrap; }
+.w-50 { flex: 1 1 460px; min-width: 280px; }
+.small { font-size:12px; color:var(--muted); }
+.hr { height:1px; background:var(--bd); margin:12px 0; }
+.hidden { display:none !important; }
+
+/* === Account menu (avatar dropdown) === */
+.header-right { margin-left:auto; display:flex; align-items:center; gap:12px; }
+
+.icon-btn {
+  width: 38px; height: 38px; border-radius: 999px;
+  display:flex; align-items:center; justify-content:center;
+  background: #f5f5f5; border:1px solid var(--bd); color: var(--fg);
+  cursor:pointer;
+}
+.icon-btn:hover { background: var(--card-hover); }
+
+.account-wrap { position: relative; }
+.account-menu {
+  position: absolute; right: 0; top: 110%;
+  width: 230px; background: #fff; border:1px solid var(--bd);
+  border-radius: 10px; box-shadow: 0 6px 20px rgba(0,0,0,.1);
+  padding: 8px; display: none;
+}
+.account-wrap.open .account-menu { display:block; }
+
+.account-item {
+  display:flex; align-items:center; justify-content:space-between;
+  gap:10px; padding:10px 12px; border-radius: 8px; color: var(--fg);
+}
+.account-item:hover { background: var(--card-hover); }
+
+.badge-num {
+  min-width: 20px; height: 20px; padding: 0 6px; border-radius: 999px;
+  background: var(--pri); color: #fff; font-size: 12px;
+  display:inline-flex; align-items:center; justify-content:center;
+}
+
+/* Avatar with initials */
+.avatar {
+  width: 38px; height: 38px; border-radius: 999px;
+  background: #222; color:#fff;
+  display:flex; align-items:center; justify-content:center; font-weight:700;
+  border: 1px solid var(--bd);
+}
+/* ===== Section title (Brand / Adidas-like) ===== */
+.section-title{ text-align:center; margin:40px 0 20px; }
+.section-title h1{
+  font-size:2.4rem; font-weight:800; text-transform:uppercase;
+  letter-spacing:.5px; line-height:1.15; color:#111;
+}
+.section-title .highlight{
+  border-bottom:4px solid #000; padding-bottom:4px;
+}
+.section-title .subtitle{
+  margin-top:8px; font-size:1rem; color:#666;
+}
+@media (max-width: 768px){
+  .section-title h1{ font-size:1.9rem; }
+}
+/* ===== Sub header search (Adidas-like) ===== */
+.subnav { border-top:1px solid var(--bd); border-bottom:1px solid var(--bd); background:#fff; }
+.subnav .wrap { max-width:1100px; margin:0 auto; padding:10px 16px; display:flex; align-items:center; gap:12px; }
+.search-wide { flex:1; display:flex; align-items:center; gap:8px; }
+.search-wide input { width:100%; height:40px; border:1px solid var(--bd); border-radius:999px; padding:0 14px; }
+.search-wide button { height:40px; border-radius:999px; padding:0 16px; }
+@media (max-width: 900px){ .subnav .wrap{ flex-wrap:wrap } }
+
+/* ===== Chips / logos row ===== */
+.chips { display:flex; gap:8px; flex-wrap:wrap; }
+.chip { padding:8px 12px; border:1px solid var(--bd); border-radius:999px; background:#fff; font-size:14px; }
+.chip.active{ background:#111; color:#fff; border-color:#111; }
+
+.logo-row { display:flex; gap:14px; flex-wrap:wrap; align-items:center; }
+.logo { width:44px; height:44px; border:1px solid var(--bd); border-radius:50%; background:linear-gradient(135deg,#eee,#fff); }
+.logo-label { font-size:12px; color:#666; margin-left:6px; }
+
+/* ===== Product grid (dùng chung cho category/sale/wishlist) ===== */
+.products { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; }
+@media (max-width: 1000px){ .products{ grid-template-columns:repeat(3,1fr);} }
+@media (max-width: 700px){ .products{ grid-template-columns:repeat(2,1fr);} }
+.product-card { background:#fff; border:1px solid var(--bd); border-radius:12px; padding:12px; }
+.p-img { height:150px; border:1px solid var(--bd); border-radius:10px; background:linear-gradient(135deg,#eee,#fff); margin-bottom:8px; }
+.p-name { font-weight:700; margin-bottom:4px; }
+.p-price s{ color:#999; margin-right:6px; }
+.p-actions { display:flex; gap:8px; margin-top:8px; }
+/* Ensure chip text is always visible */
+.chip{
+  display:inline-flex; align-items:center; justify-content:center;
+  min-height:36px; padding:8px 14px;
+  border:1px solid var(--bd); border-radius:999px;
+  background:#fff; color:#111;                 /* << chữ đen nền trắng */
+  font-size:14px; font-weight:600; line-height:1;
+}
+
+button.chip{
+  cursor:pointer;
+  background:#111; color:#fff;                  /* << nút Lọc: nền đen, chữ trắng */
+  border-color:#111;
+}
+button.chip:hover{ filter:brightness(.95); }
+button.chip:focus{ outline:2px solid #111; outline-offset:2px; }
+

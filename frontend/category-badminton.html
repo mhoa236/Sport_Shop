@@ -1,0 +1,70 @@
+<!doctype html><html lang="vi"><head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Bộ môn: Cầu lông - Sports Shop</title>
+<base href="./"><link rel="stylesheet" href="assets/base.css"><script src="assets/app.js" defer></script>
+</head><body>
+<header>
+  <a href="index.html"><strong>🏪 Sports Shop</strong></a>
+
+  <nav>
+    <a href="sports.html">Bộ môn</a>
+    <a href="sale.html">Giảm giá</a>
+    <a id="navAdmin" href="admin-products.html" style="display:none">Admin</a>
+  </nav>
+
+  <div class="header-right">
+    <!-- thanh tìm kiếm -->
+    <form class="search" action="search.html" method="get">
+      <input name="q" placeholder="Tìm kiếm sản phẩm...">
+      <button type="submit">Tìm</button>
+    </form>
+
+    <!-- Dropdown tài khoản -->
+    <div class="account-wrap">
+      <button id="accountBtn" class="icon-btn" aria-haspopup="menu" aria-expanded="false" aria-label="Tài khoản">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+          <path stroke="currentColor" stroke-width="1.6"
+                d="M20 21a8 8 0 1 0-16 0m8-9a5 5 0 1 0 0-10 5 5 0 0 0 0 10Z"/>
+        </svg>
+      </button>
+
+      <div class="account-menu">
+        <!-- trạng thái đăng nhập sẽ điều khiển ẩn/hiện mấy dòng dưới -->
+        <a class="account-item" href="account.html">Trang cá nhân</a>
+        <a class="account-item" href="cart.html">Giỏ hàng <span id="cartCount" class="badge-num">0</span></a>
+        <a class="account-item" href="wishlist.html">Wishlist <span id="wishCount" class="badge-num">0</span></a>
+        <div class="hr"></div>
+        <a id="loginItem" class="account-item" href="login.html">Đăng nhập</a>
+        <a id="registerItem" class="account-item" href="register.html">Đăng ký</a>
+        <a id="logoutItem" class="account-item" href="#">Đăng xuất</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+
+<div class="container">
+  <h1>Bộ môn: Cầu lông</h1>
+  <div class="row" style="gap:10px;margin-bottom:12px;">
+    <select class="chip"><option>Giới tính</option><option>Nam</option><option>Nữ</option><option>Unisex</option></select>
+    <select class="chip"><option>Đối tượng</option><option>Người lớn</option><option>Trẻ em</option></select>
+    <input class="chip" placeholder="Giá từ" style="width:120px;"><input class="chip" placeholder="Giá đến" style="width:120px;">
+    <button class="chip">Lọc</button>
+  </div>
+
+  <div class="products">
+    <div class="product-card">
+      <div class="p-img"></div><div class="p-name">Vợt Yonex Astrox</div>
+      <div class="p-price"><s>2.200.000đ</s> 1.850.000đ</div>
+      <div class="p-actions"><button class="ghost">Thêm giỏ</button><button class="ghost">Wishlist</button></div>
+    </div>
+    <div class="product-card">
+      <div class="p-img"></div><div class="p-name">Áo cầu lông thoáng khí</div>
+      <div class="p-price">320.000đ</div>
+      <div class="p-actions"><button class="ghost">Thêm giỏ</button><button class="ghost">Wishlist</button></div>
+    </div>
+  </div>
+</div>
+
+<footer>© 2025 Sports Shop — <a href="policy-contact.html">Chính sách & Liên hệ</a></footer>
+</body></html>

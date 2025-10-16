@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Đăng ký - Sports Shop</title>
+  <base href="./">
+  <link rel="stylesheet" href="assets/base.css">
+  <script src="assets/app.js" defer></script>
+</head>
+<body>
+<header>
+  <a href="index.html"><strong>🏪 Sports Shop</strong></a>
+
+  <nav>
+    <a href="sports.html">Bộ môn</a>
+    <a href="sale.html">Giảm giá</a>
+    <a id="navAdmin" href="admin-products.html" style="display:none">Admin</a>
+  </nav>
+
+  <div class="header-right">
+    <!-- thanh tìm kiếm -->
+    <form class="search" action="search.html" method="get">
+      <input name="q" placeholder="Tìm kiếm sản phẩm...">
+      <button type="submit">Tìm</button>
+    </form>
+
+    <!-- Dropdown tài khoản -->
+    <div class="account-wrap">
+      <button id="accountBtn" class="icon-btn" aria-haspopup="menu" aria-expanded="false" aria-label="Tài khoản">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+          <path stroke="currentColor" stroke-width="1.6"
+                d="M20 21a8 8 0 1 0-16 0m8-9a5 5 0 1 0 0-10 5 5 0 0 0 0 10Z"/>
+        </svg>
+      </button>
+
+      <div class="account-menu">
+        <!-- trạng thái đăng nhập sẽ điều khiển ẩn/hiện mấy dòng dưới -->
+        <a class="account-item" href="account.html">Trang cá nhân</a>
+        <a class="account-item" href="cart.html">Giỏ hàng <span id="cartCount" class="badge-num">0</span></a>
+        <a class="account-item" href="wishlist.html">Wishlist <span id="wishCount" class="badge-num">0</span></a>
+        <div class="hr"></div>
+        <a id="loginItem" class="account-item" href="login.html">Đăng nhập</a>
+        <a id="registerItem" class="account-item" href="register.html">Đăng ký</a>
+        <a id="logoutItem" class="account-item" href="#">Đăng xuất</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+
+<div class="container">
+  <h1>Đăng ký</h1>
+  <form id="reg-form" class="grid" style="gap:8px; max-width:420px">
+    <input name="full_name" placeholder="Họ tên" required>
+    <input name="email" type="email" placeholder="Email" required>
+    <input name="password" type="password" placeholder="Mật khẩu" required>
+    <button>Tạo tài khoản</button>
+    <div class="small">Đã có tài khoản? <a href="login.html">Đăng nhập</a></div>
+  </form>
+</div>
+
+<footer>© 2025 Sports Shop — <a href="policy-contact.html">Chính sách & Liên hệ</a></footer>
+
+<script>
+(function(){
+  const form = document.getElementById('reg-form');
+  form.addEventListener('submit', (e)=>{
+    e.preventDefault();
+    const full_name = form.full_name.value.trim();
+    const email = form.email.value.trim();
+    const password = form.password.value;
+    const users = JSON.parse(localStorage.getItem('users') || '[]');
+    if (users.some(u => u.email === email)) { alert('Email đã tồn tại (demo).'); return; }
+    users.push({ full_name, email, password, avatar: '' });
+    localStorage.setItem('users', JSON.stringify(users));
+    alert('Đăng ký thành công! Bạn có thể đăng nhập ngay.');
+    location.href = 'login.html';
+  });
+})();
+</script>
+</body>
+</html>

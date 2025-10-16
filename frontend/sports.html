@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Bộ môn - Sports Shop</title>
+  <base href="./">
+  <link rel="stylesheet" href="assets/base.css">
+  <script src="assets/app.js" defer></script>
+  <style>
+    .section-title h1 .highlight{ border-bottom:none; }
+    .chips{display:flex;gap:8px;flex-wrap:wrap}
+    .chip{padding:8px 12px;border:1px solid var(--bd);border-radius:999px;background:#fff;font-size:14px}
+    .chip.active{background:#111;color:#fff;border-color:#111}
+    .mega{max-width:1100px;margin:0 auto;padding:0 16px}
+    .mega-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+    .mega-card{background:#fff;border:1px solid var(--bd);border-radius:12px;overflow:hidden;transition:transform .15s,box-shadow .15s}
+    .mega-card:hover{transform:translateY(-2px);box-shadow:0 10px 20px rgba(0,0,0,.06)}
+    .mega-media{height:120px;background:linear-gradient(135deg,#eee,#fff)}
+    .mega-body{padding:14px}
+    .mega-body h3{margin-bottom:8px;font-size:18px;color:#111}
+    .links{display:grid;grid-template-columns:repeat(2,1fr);gap:8px 12px}
+    .links a{color:#111;font-size:14px}
+    .tiles{max-width:1100px;margin:16px auto;padding:0 16px}
+    .tile{display:block;background:#fff;border:1px solid var(--bd);border-radius:12px;padding:18px}
+    .tile h4{font-size:16px;margin-bottom:6px;color:#111}
+    @media (max-width:900px){.mega-grid{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <!-- Header: giữ thanh tìm kiếm bên phải -->
+  <header>
+  <a href="index.html"><strong>🏪 Sports Shop</strong></a>
+
+  <nav>
+    <a href="sports.html">Bộ môn</a>
+    <a href="sale.html">Giảm giá</a>
+    <a id="navAdmin" href="admin-products.html" style="display:none">Admin</a>
+  </nav>
+
+  <div class="header-right">
+    <!-- thanh tìm kiếm -->
+    <form class="search" action="search.html" method="get">
+      <input name="q" placeholder="Tìm kiếm sản phẩm...">
+      <button type="submit">Tìm</button>
+    </form>
+
+    <!-- Dropdown tài khoản -->
+    <div class="account-wrap">
+      <button id="accountBtn" class="icon-btn" aria-haspopup="menu" aria-expanded="false" aria-label="Tài khoản">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+          <path stroke="currentColor" stroke-width="1.6"
+                d="M20 21a8 8 0 1 0-16 0m8-9a5 5 0 1 0 0-10 5 5 0 0 0 0 10Z"/>
+        </svg>
+      </button>
+
+      <div class="account-menu">
+        <!-- trạng thái đăng nhập sẽ điều khiển ẩn/hiện mấy dòng dưới -->
+        <a class="account-item" href="account.html">Trang cá nhân</a>
+        <a class="account-item" href="cart.html">Giỏ hàng <span id="cartCount" class="badge-num">0</span></a>
+        <a class="account-item" href="wishlist.html">Wishlist <span id="wishCount" class="badge-num">0</span></a>
+        <div class="hr"></div>
+        <a id="loginItem" class="account-item" href="login.html">Đăng nhập</a>
+        <a id="registerItem" class="account-item" href="register.html">Đăng ký</a>
+        <a id="logoutItem" class="account-item" href="#">Đăng xuất</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+
+  <div class="container">
+    <section class="section-title">
+      <h1><span class="highlight">Khám phá</span> nhóm bộ môn</h1>
+      <p class="subtitle">Rèn luyện • Dã ngoại • Thể thao phong trào</p>
+    </section>
+
+    <div class="chips" style="justify-content:center;margin-bottom:18px">
+      <a class="chip" href="category-running.html">Chạy</a>
+      <a class="chip" href="category-badminton.html">Cầu lông</a>
+      <a class="chip" href="category-basketball.html">Bóng rổ</a>
+      <a class="chip" href="category-football.html">Bóng đá</a>
+      <a class="chip" href="category-trekking.html">Trekking</a>
+      <a class="chip" href="category-camping.html">Camping</a>
+    </div>
+  </div>
+
+  <!-- Mega sections -->
+  <section class="mega">
+    <div class="mega-grid">
+      <div class="mega-card">
+        <a href="category-running.html"><div class="mega-media"></div></a>
+        <div class="mega-body">
+          <h3>🏃‍♂️ Rèn luyện (Fitness)</h3>
+          <div class="links">
+            <a href="category-running.html">Giày chạy</a>
+            <a href="category-running.html">Quần áo chạy</a>
+            <a href="category-badminton.html">Vợt & phụ kiện</a>
+            <a href="category-badminton.html">Áo cầu lông</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="mega-card">
+        <a href="category-trekking.html"><div class="mega-media"></div></a>
+        <div class="mega-body">
+          <h3>🏕️ Dã ngoại (Outdoor)</h3>
+          <div class="links">
+            <a href="category-trekking.html">Giày trekking</a>
+            <a href="category-trekking.html">Gậy, nón</a>
+            <a href="category-camping.html">Lều & túi ngủ</a>
+            <a href="category-camping.html">Bếp, đèn</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="mega-card">
+        <a href="category-basketball.html"><div class="mega-media"></div></a>
+        <div class="mega-body">
+          <h3>⚽ Phong trào (Team)</h3>
+          <div class="links">
+            <a href="category-basketball.html">Giày bóng rổ</a>
+            <a href="category-basketball.html">Áo quần rổ</a>
+            <a href="category-football.html">Áo bóng đá</a>
+            <a href="category-football.html">Găng, bảo hộ</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="tiles">
+    <div class="grid cols-3">
+      <a class="tile" href="sale.html"><h4>Đang giảm giá</h4><p>Deal hot tuần này</p></a>
+      <a class="tile" href="product.html"><h4>Hàng mới về</h4><p>Cập nhật mỗi ngày</p></a>
+      <a class="tile" href="sports.html"><h4>BST theo mùa</h4><p>Chạy mưa, leo núi, team sport</p></a>
+    </div>
+  </div>
+
+  <footer>© 2025 Sports Shop — <a href="policy-contact.html">Chính sách & Liên hệ</a></footer>
+</body>
+</html>

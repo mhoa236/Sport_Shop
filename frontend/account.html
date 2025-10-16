@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Tài khoản - Sports Shop</title>
+  <base href="./">
+  <link rel="stylesheet" href="assets/base.css">
+  <script src="assets/app.js" defer></script>
+  <style>
+    .p-avatar { width:96px; height:96px; border-radius:50%; object-fit:cover; border:1px solid var(--bd); background:#eee; }
+    .p-avatar-placeholder { width:96px; height:96px; border-radius:50%; display:flex; align-items:center; justify-content:center; background:#ddd; color:#555; font-weight:700; border:1px solid var(--bd); }
+  </style>
+</head>
+<body>
+<header>
+  <a href="index.html"><strong>🏪 Sports Shop</strong></a>
+
+  <nav>
+    <a href="sports.html">Bộ môn</a>
+    <a href="sale.html">Giảm giá</a>
+    <a id="navAdmin" href="admin-products.html" style="display:none">Admin</a>
+  </nav>
+
+  <div class="header-right">
+    <!-- thanh tìm kiếm -->
+    <form class="search" action="search.html" method="get">
+      <input name="q" placeholder="Tìm kiếm sản phẩm...">
+      <button type="submit">Tìm</button>
+    </form>
+
+    <!-- Dropdown tài khoản -->
+    <div class="account-wrap">
+      <button id="accountBtn" class="icon-btn" aria-haspopup="menu" aria-expanded="false" aria-label="Tài khoản">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+          <path stroke="currentColor" stroke-width="1.6"
+                d="M20 21a8 8 0 1 0-16 0m8-9a5 5 0 1 0 0-10 5 5 0 0 0 0 10Z"/>
+        </svg>
+      </button>
+
+      <div class="account-menu">
+        <!-- trạng thái đăng nhập sẽ điều khiển ẩn/hiện mấy dòng dưới -->
+        <a class="account-item" href="account.html">Trang cá nhân</a>
+        <a class="account-item" href="cart.html">Giỏ hàng <span id="cartCount" class="badge-num">0</span></a>
+        <a class="account-item" href="wishlist.html">Wishlist <span id="wishCount" class="badge-num">0</span></a>
+        <div class="hr"></div>
+        <a id="loginItem" class="account-item" href="login.html">Đăng nhập</a>
+        <a id="registerItem" class="account-item" href="register.html">Đăng ký</a>
+        <a id="logoutItem" class="account-item" href="#">Đăng xuất</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+
+<div class="container">
+  <h1>Trang cá nhân</h1>
+  <div class="row">
+    <div class="w-50 card">
+      <h3>Ảnh đại diện & Thông tin</h3>
+      <div class="row" style="align-items:center">
+        <div id="avatarBox"></div>
+        <div>
+          <input id="avatarInput" type="file" accept="image/*">
+          <div class="small">Tải ảnh ≤ 1MB, dạng JPG/PNG.</div>
+        </div>
+      </div>
+      <div class="hr"></div>
+      <form id="profile" class="grid" style="gap:8px">
+        <input name="full_name" placeholder="Họ tên" required>
+        <input name="email" placeholder="Email" type="email" required disabled>
+        <input name="phone" placeholder="Số điện thoại">
+        <input name="line1" placeholder="Địa chỉ">
+        <button>Lưu thay đổi</button>
+      </form>
+      <div class="small" id="saved" style="margin-top:8px"></div>
+    </div>
+
+    <div class="w-50 card">
+      <h3>Đơn hàng của tôi</h3>
+      <table id="orders">
+        <thead><tr><th>Mã</th><th>Ngày</th><th>Trạng thái</th><th>Tổng</th></tr></thead>
+        <tbody><!-- render --></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<footer>© 2025 Sports Shop — <a href="policy-contact.html">Chính sách & Liên hệ</a></footer>
+
+<script>
+(function(){
+  const fmt = n => (n||0).toLocaleString('vi-VN') + 'đ';
+  const auth = JSON.parse(localStorage.getItem('auth') || 'null');
+  if(!auth){ alert('Vui lòng đăng nhập.'); location.href='login.html'; return; }
+
+  // Lấy user theo email
+  const users = JSON.parse(localStorage.getItem('users') || '[]');
+  const user = users.find(u => u.email === auth.email) || { email: auth.email, full_name: auth.full_name || 'User', avatar:'', phone:'', line1:'' };
+
+  // Render avatar
+  const box = document.getElementById('avatarBox');
+  function renderAvatar(){
+    box.innerHTML = '';
+    if (user.avatar) {
+      const img = document.createElement('img');
+      img.src = user.avatar; img.className='p-avatar';
+      box.appendChild(img);
+    } else {
+      const init = (user.full_name || user.email || 'U').trim().charAt(0).toUpperCase();
+      const div = document.createElement('div');
+      div.className='p-avatar-placeholder'; div.textContent = init;
+      box.appendChild(div);
+    }
+  }
+  renderAvatar();
+
+  // Upload avatar
+  const input = document.getElementById('avatarInput');
+  input.addEventListener('change', e=>{
+    const file = e.target.files[0];
+    if(!file) return;
+    if(file.size > 1024*1024){ alert('Ảnh quá lớn (>1MB).'); input.value=''; return; }
+    const fr = new FileReader();
+    fr.onload = () => {
+      user.avatar = fr.result; // base64
+      saveUser();
+      renderAvatar();
+      alert('Đã cập nhật ảnh đại diện!');
+    };
+    fr.readAsDataURL(file);
+  });
+
+  // Form profile
+  const pf = document.getElementById('profile');
+  const saved = document.getElementById('saved');
+  ['full_name','email','phone','line1'].forEach(k => { if(pf[k]) pf[k].value = user[k] || ''; });
+  pf.addEventListener('submit', e=>{
+    e.preventDefault();
+    const fd = new FormData(pf);
+    user.full_name = fd.get('full_name');
+    user.phone = fd.get('phone') || '';
+    user.line1 = fd.get('line1') || '';
+    saveUser();
+    // cập nhật auth name để header lấy initials đúng
+    localStorage.setItem('auth', JSON.stringify({ email: user.email, full_name: user.full_name }));
+    saved.textContent = 'Đã lưu thông tin!';
+    setTimeout(()=> saved.textContent='', 2000);
+  });
+
+  function saveUser(){
+    const idx = users.findIndex(u => u.email === user.email);
+    if (idx >= 0) users[idx] = user; else users.push(user);
+    localStorage.setItem('users', JSON.stringify(users));
+  }
+
+  // Đơn hàng demo
+  const orders = JSON.parse(localStorage.getItem('orders') || '[]');
+  if (!orders.length) {
+    orders.push({id:1001, date:'14/10/2025', status:'pending', total:1020000});
+    localStorage.setItem('orders', JSON.stringify(orders));
+  }
+  const tb = document.querySelector('#orders tbody');
+  tb.innerHTML = orders.map(o => `<tr><td>#${o.id}</td><td>${o.date}</td><td>${o.status}</td><td>${fmt(o.total)}</td></tr>`).join('');
+})();
+</script>
+</body>
+</html>

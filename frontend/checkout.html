@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Thanh toán - Sports Shop</title>
+  <link rel="stylesheet" href="assets/base.css">
+  <script defer src="assets/app.js"></script>
+  <style>
+    .co-wrap{max-width:1100px;margin:0 auto;padding:16px}
+    .co-grid{display:grid;grid-template-columns:2fr 1fr;gap:18px}
+    @media(max-width:900px){.co-grid{grid-template-columns:1fr}}
+    .card{background:#fff;border:1px solid var(--bd);border-radius:12px;padding:14px}
+    .form-row{margin:8px 0}
+    .form-row input,.form-row select{width:100%;padding:10px;border:1px solid var(--bd);border-radius:10px;background:#fff}
+    .sum-row{display:flex;justify-content:space-between;margin:6px 0}
+    .btn-primary{display:block;text-align:center;background:#111;color:#fff;padding:12px;border-radius:10px;margin-top:10px}
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header>
+    <a href="index.html"><strong>🏪 Sports Shop</strong></a>
+    <nav>
+      <a href="sports.html">Bộ môn</a>
+      <a href="sale.html">Giảm giá</a>
+      <a id="navAdmin" href="admin-products.html" style="display:none">Admin</a>
+    </nav>
+    <div class="header-right">
+      <form class="search" action="search.html"><input name="q" placeholder="Tìm kiếm sản phẩm..."><button>Tìm</button></form>
+      <div class="account-wrap">
+        <button id="accountBtn" class="icon-btn" aria-haspopup="menu" aria-expanded="false" aria-label="Tài khoản">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+            <path stroke="currentColor" stroke-width="1.6" d="M20 21a8 8 0 1 0-16 0m8-9a5 5 0 1 0 0-10 5 5 0 0 0 0 10Z"/>
+          </svg>
+        </button>
+        <div class="account-menu">
+          <a class="account-item" href="account.html">Trang cá nhân</a>
+          <a class="account-item" href="cart.html">Giỏ hàng <span id="cartCount" class="badge-num">0</span></a>
+          <a class="account-item" href="wishlist.html">Wishlist <span id="wishCount" class="badge-num">0</span></a>
+          <div class="hr"></div>
+          <a id="loginItem" class="account-item" href="login.html">Đăng nhập</a>
+          <a id="registerItem" class="account-item" href="register.html">Đăng ký</a>
+          <a id="logoutItem" class="account-item" href="#">Đăng xuất</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="co-wrap">
+    <h1>Thanh toán</h1>
+    <div class="co-grid">
+      <!-- Bên trái: Form -->
+      <form class="card" id="coForm">
+        <h2>Địa chỉ nhận hàng</h2>
+        <div class="form-row"><input name="name" placeholder="Họ tên" required></div>
+        <div class="form-row"><input name="phone" placeholder="Số điện thoại" required></div>
+        <div class="form-row"><input name="addr" placeholder="Địa chỉ (Số nhà, đường...)" required></div>
+        <div class="form-row"><input name="district" placeholder="Quận/Huyện" required></div>
+        <div class="form-row">
+          <select id="province" name="province" required>
+            <option value="">-- Chọn tỉnh/thành phố --</option>
+            <option value="Hà Nội">Hà Nội</option>
+            <option value="TP HCM">TP HCM</option>
+            <option value="Đà Nẵng">Đà Nẵng</option>
+            <option value="Hải Phòng">Hải Phòng</option>
+            <option value="Khác">Tỉnh khác</option>
+          </select>
+        </div>
+        <h3>Phương thức thanh toán</h3>
+        <div class="form-row">
+          <select name="method">
+            <option>COD (Thanh toán khi nhận)</option>
+            <option>Chuyển khoản</option>
+          </select>
+        </div>
+        <p style="font-size:12px;color:#555">Lưu ý: Đây là bản demo. Đơn hàng được lưu local.</p>
+        <button class="btn-primary" type="submit">Đặt hàng</button>
+      </form>
+
+      <!-- Bên phải: Tóm tắt -->
+      <aside class="card">
+        <h2>Đơn hàng</h2>
+        <div id="coList" style="margin-bottom:10px"></div>
+        <div style="display:flex;gap:4px;margin:8px 0;">
+          <input id="couponInput" placeholder="Nhập mã giảm giá (VD: GIA10)" style="flex:1;padding:8px;border:1px solid var(--bd);border-radius:8px">
+          <button type="button" id="applyCoupon" style="padding:8px 12px;border:none;border-radius:8px;background:#111;color:#fff">Áp dụng</button>
+        </div>
+        <div class="sum-row"><span>Tạm tính</span><span id="coSubtotal">0đ</span></div>
+        <div class="sum-row"><span>Giảm giá</span><span id="coDiscount">-0đ</span></div>
+        <div class="sum-row"><span>Phí vận chuyển</span><span id="coShip">0đ</span></div>
+        <div class="sum-row" style="font-weight:900"><span>Tổng cộng</span><span id="coTotal">0đ</span></div>
+      </aside>
+    </div>
+  </main>
+
+  <footer>© 2025 Sports Shop — <a href="policy-contact.html">Chính sách & Liên hệ</a></footer>
+
+  <script>
+    (function(){
+      const fmt = n => (Number(n)||0).toLocaleString('vi-VN')+'đ';
+      const cart = JSON.parse(localStorage.getItem('cart')||'[]');
+      const listEl = document.getElementById('coList');
+      const subEl = document.getElementById('coSubtotal');
+      const disEl = document.getElementById('coDiscount');
+      const shipEl = document.getElementById('coShip');
+      const totalEl = document.getElementById('coTotal');
+      const provinceEl = document.getElementById('province');
+      const couponInput = document.getElementById('couponInput');
+      const applyBtn = document.getElementById('applyCoupon');
+
+      let subtotal = cart.reduce((s,i)=>s+i.price*i.qty,0);
+      let discount = 0;
+      let ship = 0;
+
+      function renderList(){
+        listEl.innerHTML = cart.map(i=>`
+          <div style="display:flex;justify-content:space-between;margin:4px 0">
+            <span>${i.name} × ${i.qty}</span>
+            <span>${fmt(i.price*i.qty)}</span>
+          </div>`).join('');
+        updateTotal();
+      }
+
+      function updateTotal(){
+        subEl.textContent = fmt(subtotal);
+        disEl.textContent = discount>0?('-'+fmt(discount)):'-0đ';
+        shipEl.textContent = ship>0?fmt(ship):'Miễn phí';
+        totalEl.textContent = fmt(subtotal - discount + ship);
+      }
+
+      // Áp dụng mã giảm giá
+      applyBtn.addEventListener('click',()=>{
+        const code = couponInput.value.trim().toUpperCase();
+        if(code === 'GIA10'){
+          discount = Math.round(subtotal*0.1);
+          alert('Áp dụng mã giảm giá 10% thành công!');
+        }else{
+          discount = 0;
+          alert('Mã không hợp lệ.');
+        }
+        updateTotal();
+      });
+
+      // Phí ship theo tỉnh
+      provinceEl.addEventListener('change',()=>{
+        const val = provinceEl.value;
+        if(val==='Hà Nội' || val==='TP HCM') ship = 30000;
+        else if(val==='Đà Nẵng' || val==='Hải Phòng') ship = 40000;
+        else ship = 50000;
+        updateTotal();
+      });
+
+      document.getElementById('coForm').addEventListener('submit',e=>{
+        e.preventDefault();
+        if(cart.length===0){ alert('Giỏ hàng trống.'); return; }
+        alert('Đặt hàng thành công! 🎉');
+        localStorage.setItem('cart','[]');
+        location.href='account.html';
+      });
+
+      renderList();
+    })();
+  </script>
+</body>
+</html>

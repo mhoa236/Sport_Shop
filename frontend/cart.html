@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Giỏ hàng - Sports Shop</title>
+  <link rel="stylesheet" href="assets/base.css">
+  <script defer src="assets/app.js"></script>
+  <style>
+    /* Layout kiểu Adidas */
+    .cart-wrap{max-width:1100px;margin:0 auto;padding:16px}
+    .cart-grid{display:grid;grid-template-columns:2fr 1fr;gap:18px}
+    @media(max-width:900px){.cart-grid{grid-template-columns:1fr}}
+
+    .cart-card{background:#fff;border:1px solid var(--bd);border-radius:12px;overflow:hidden}
+    .cart-item{display:grid;grid-template-columns:96px 1fr auto;gap:12px;padding:14px;border-bottom:1px solid var(--bd)}
+    .cart-item:last-child{border-bottom:none}
+    .cart-thumb{width:96px;height:96px;border:1px solid var(--bd);border-radius:10px;background:#f3f3f3;object-fit:cover}
+    .cart-name{font-weight:700;margin-bottom:4px}
+    .cart-meta{color:#666;font-size:13px}
+    .qty{display:inline-flex;border:1px solid var(--bd);border-radius:10px;overflow:hidden}
+    .qty button{width:34px;height:34px;border:none;background:#fff}
+    .qty input{width:44px;text-align:center;border:none}
+    .cart-actions{display:flex;gap:10px;margin-top:8px}
+    .link{font-size:13px;color:#111;text-decoration:underline;cursor:pointer}
+
+    .summary{background:#fff;border:1px solid var(--bd);border-radius:12px;padding:14px}
+    .sum-row{display:flex;justify-content:space-between;margin:6px 0}
+    .sum-total{font-weight:900;font-size:18px}
+    .btn-primary{display:block;text-align:center;background:#111;color:#fff;padding:12px;border-radius:10px;margin-top:10px}
+
+    .empty{padding:24px;text-align:center;color:#666}
+    .rec-title{margin:16px 0 10px;font-weight:800}
+    .recs{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+    @media(max-width:900px){.recs{grid-template-columns:repeat(2,1fr)}}
+    .rec{background:#fff;border:1px solid var(--bd);border-radius:12px;padding:12px}
+    .rec .img{height:120px;border:1px solid var(--bd);border-radius:10px;background:linear-gradient(135deg,#eee,#fff);margin-bottom:8px}
+    .price s{color:#999;margin-right:6px}
+  </style>
+</head>
+<body>
+
+  <!-- HEADER CHUẨN (dropdown tài khoản + search) -->
+  <header>
+    <a href="index.html"><strong>🏪 Sports Shop</strong></a>
+
+    <nav>
+      <a href="sports.html">Bộ môn</a>
+      <a href="sale.html">Giảm giá</a>
+      <a id="navAdmin" href="admin-products.html" style="display:none">Admin</a>
+    </nav>
+
+    <div class="header-right">
+      <form class="search" action="search.html" method="get">
+        <input name="q" placeholder="Tìm kiếm sản phẩm...">
+        <button type="submit">Tìm</button>
+      </form>
+
+      <div class="account-wrap">
+        <button id="accountBtn" class="icon-btn" aria-haspopup="menu" aria-expanded="false" aria-label="Tài khoản">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+            <path stroke="currentColor" stroke-width="1.6"
+                  d="M20 21a8 8 0 1 0-16 0m8-9a5 5 0 1 0 0-10 5 5 0 0 0 0 10Z"/>
+          </svg>
+        </button>
+        <div class="account-menu">
+          <a class="account-item" href="account.html">Trang cá nhân</a>
+          <a class="account-item" href="cart.html">Giỏ hàng <span id="cartCount" class="badge-num">0</span></a>
+          <a class="account-item" href="wishlist.html">Wishlist <span id="wishCount" class="badge-num">0</span></a>
+          <div class="hr"></div>
+          <a id="loginItem" class="account-item" href="login.html">Đăng nhập</a>
+          <a id="registerItem" class="account-item" href="register.html">Đăng ký</a>
+          <a id="logoutItem" class="account-item" href="#">Đăng xuất</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- NỘI DUNG -->
+  <main class="cart-wrap">
+    <h1>Giỏ hàng</h1>
+
+    <div class="cart-grid">
+      <!-- Danh sách item -->
+      <div class="cart-card" id="cartList">
+        <div class="empty" id="cartEmpty" style="display:none">
+          Giỏ hàng trống. <a class="link" href="sports.html">Tiếp tục mua sắm</a>
+        </div>
+        <!-- JS sẽ render các .cart-item tại đây -->
+      </div>
+
+      <!-- Tổng kết -->
+      <aside class="summary">
+        <div class="sum-row"><span>Tạm tính</span><span id="sumSubtotal">0đ</span></div>
+        <div class="sum-row"><span>Vận chuyển</span><span id="sumShipping">Miễn phí</span></div>
+        <div class="sum-row"><span>Mã giảm (nếu có)</span><span id="sumDiscount">0đ</span></div>
+        <div class="sum-row sum-total"><span>Tổng cộng</span><span id="sumTotal">0đ</span></div>
+        <a id="checkoutBtn" href="checkout.html" class="btn-primary">Thanh toán</a>
+        <p class="muted" style="font-size:12px;margin-top:6px">Bạn có thể hoàn tất việc nhập địa chỉ ở trang thanh toán.</p>
+      </aside>
+    </div>
+
+    <!-- Gợi ý thêm (kiểu Adidas “You may also like”) -->
+    <h3 class="rec-title">Gợi ý cho bạn</h3>
+    <div class="recs" id="recList">
+      <div class="rec">
+        <div class="img"></div>
+        <div><strong>Áo chạy Dry-Fit</strong></div>
+        <div class="price">320.000đ</div>
+        <button class="ghost add-to-cart"
+          data-id="r1" data-name="Áo chạy Dry-Fit" data-price="320000" data-img="" data-qty="1">Thêm vào giỏ</button>
+      </div>
+      <div class="rec">
+        <div class="img"></div>
+        <div><strong>Balo trekking 40L</strong></div>
+        <div class="price">890.000đ</div>
+        <button class="ghost add-to-cart"
+          data-id="r2" data-name="Balo trekking 40L" data-price="890000" data-img="" data-qty="1">Thêm vào giỏ</button>
+      </div>
+      <div class="rec">
+        <div class="img"></div>
+        <div><strong>Giày bóng rổ Pro</strong></div>
+        <div class="price"><s>2.200.000đ</s> 1.950.000đ</div>
+        <button class="ghost add-to-cart"
+          data-id="r3" data-name="Giày bóng rổ Pro" data-price="1950000" data-img="" data-qty="1">Thêm vào giỏ</button>
+      </div>
+      <div class="rec">
+        <div class="img"></div>
+        <div><strong>Lều 2 người</strong></div>
+        <div class="price">1.390.000đ</div>
+        <button class="ghost add-to-cart"
+          data-id="r4" data-name="Lều 2 người" data-price="1390000" data-img="" data-qty="1">Thêm vào giỏ</button>
+      </div>
+    </div>
+  </main>
+
+  <footer>© 2025 Sports Shop — <a href="policy-contact.html">Chính sách & Liên hệ</a></footer>
+</body>
+</html>

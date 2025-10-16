@@ -1,0 +1,316 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Admin – Quản lý cửa hàng</title>
+  <link rel="stylesheet" href="assets/base.css">
+  <style>
+    .wrap{max-width:1100px;margin:0 auto;padding:16px}
+    .tabs{display:flex;gap:8px;margin:8px 0 14px}
+    .tab{padding:8px 12px;border:1px solid var(--bd);border-radius:10px;background:#fff;cursor:pointer;font-weight:700}
+    .tab.active{background:#111;color:#fff;border-color:#111}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+    @media(max-width:900px){.grid{grid-template-columns:1fr}}
+    .card{background:#fff;border:1px solid var(--bd);border-radius:12px;padding:14px}
+    .form-row{margin:8px 0}
+    .form-row input,.form-row select{width:100%;padding:10px;border:1px solid var(--bd);border-radius:10px;background:#fff}
+    table{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--bd);border-radius:12px;overflow:hidden}
+    th,td{padding:10px;border-bottom:1px solid var(--bd);text-align:left}
+    .chip{display:inline-block;padding:4px 8px;border:1px solid var(--bd);border-radius:999px;font-size:12px;background:#fff}
+    .actions{display:flex;gap:8px}
+    .ghost.small{padding:6px 10px;font-size:13px;border-radius:8px}
+    .hidden{display:none}
+  </style>
+</head>
+<body>
+  <!-- Header chuẩn -->
+  <header>
+    <a href="index.html"><strong>🏪 Sports Shop</strong></a>
+    <nav>
+      <a href="sports.html">Bộ môn</a>
+      <a href="sale.html">Giảm giá</a>
+      <a id="navAdmin" href="admin-products.html">Admin</a>
+    </nav>
+    <div class="header-right">
+      <form class="search" action="search.html" method="get">
+        <input name="q" placeholder="Tìm kiếm sản phẩm..."><button>Tìm</button>
+      </form>
+      <div class="account-wrap">
+        <button id="accountBtn" class="icon-btn" aria-haspopup="menu" aria-expanded="false" aria-label="Tài khoản">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+            <path stroke="currentColor" stroke-width="1.6" d="M20 21a8 8 0 1 0-16 0m8-9a5 5 0 1 0 0-10 5 5 0 0 0 0 10Z"/>
+          </svg>
+        </button>
+        <div class="account-menu">
+          <a class="account-item" href="account.html">Trang cá nhân</a>
+          <a class="account-item" href="cart.html">Giỏ hàng <span id="cartCount" class="badge-num">0</span></a>
+          <a class="account-item" href="wishlist.html">Wishlist <span id="wishCount" class="badge-num">0</span></a>
+          <div class="hr"></div>
+          <a id="loginItem" class="account-item" href="login.html">Đăng nhập</a>
+          <a id="registerItem" class="account-item" href="register.html">Đăng ký</a>
+          <a id="logoutItem" class="account-item" href="#">Đăng xuất</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <h1>Bảng điều khiển Admin</h1>
+    <p class="muted">
+      
+
+    <!-- Tabs -->
+    <div class="tabs">
+      <button class="tab active" data-tab="products">Sản phẩm</button>
+      <button class="tab" data-tab="orders">Đơn hàng</button>
+      <button class="tab" data-tab="coupons">Mã giảm giá</button>
+    </div>
+
+    <!-- PRODUCTS -->
+    <section id="tab-products">
+      <div class="grid">
+        <div class="card">
+          <h2>Thêm sản phẩm</h2> <!-- đã bỏ chữ / Sửa -->
+          <form id="prodForm">
+            <input type="hidden" name="editingIndex" value="-1">
+            <div class="form-row"><input name="name" placeholder="Tên sản phẩm" required></div>
+            <div class="form-row"><input name="price" type="number" placeholder="Giá (đ)" required></div>
+            <div class="form-row">
+              <select name="category" required>
+                <option value="running">Chạy</option>
+                <option value="trekking">Trekking</option>
+                <option value="camping">Camping</option>
+                <option value="basketball">Bóng rổ</option>
+                <option value="football">Bóng đá</option>
+                <option value="badminton">Cầu lông</option>
+              </select>
+            </div>
+            <div class="form-row"><input name="stock" type="number" min="0" placeholder="Tồn kho"></div>
+            <div class="form-row"><input name="img" placeholder="URL ảnh (tuỳ chọn)"></div>
+            <button class="ghost" id="btnSaveProd" type="submit" style="width:100%">Lưu sản phẩm</button>
+          </form>
+        </div>
+
+        <div class="card">
+          <h2>Danh sách sản phẩm</h2>
+          <table id="prodTable">
+            <thead><tr><th>ID</th><th>Tên</th><th>Giá</th><th>Danh mục</th><th>Tồn</th><th></th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ORDERS -->
+    <section id="tab-orders" class="hidden">
+      <div class="card">
+        <h2>Đơn hàng</h2>
+        <table id="orderTable">
+          <thead><tr><th>Mã</th><th>Ngày</th><th>Khách</th><th>Tổng</th><th>Trạng thái</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- COUPONS -->
+    <section id="tab-coupons" class="hidden">
+      <div class="grid">
+        <div class="card">
+          <h2>Thêm mã giảm giá</h2>
+          <form id="couponForm">
+            <input type="hidden" name="editingIndex" value="-1">
+            <div class="form-row"><input name="code" placeholder="Mã (VD: GIA10)" required></div>
+            <div class="form-row">
+              <select name="type" required>
+                <option value="percent">Phần trăm (%)</option>
+                <option value="fixed">Số tiền (đ)</option>
+              </select>
+            </div>
+            <div class="form-row"><input name="value" type="number" placeholder="Giá trị (VD: 10 hoặc 50000)" required></div>
+            <div class="form-row"><input name="min" type="number" placeholder="Đơn tối thiểu để áp dụng (đ)"></div>
+            <div class="form-row"><input name="expire" type="date" placeholder="Ngày hết hạn"></div>
+            <div class="form-row">
+              <select name="active">
+                <option value="true">Đang bật</option>
+                <option value="false">Tắt</option>
+              </select>
+            </div>
+            <button class="ghost" id="btnSaveCoupon" type="submit" style="width:100%">Lưu mã</button>
+          </form>
+        </div>
+
+        <div class="card">
+          <h2>Danh sách mã giảm giá</h2>
+          <table id="couponTable">
+            <thead><tr><th>Mã</th><th>Loại</th><th>Giá trị</th><th>Tối thiểu</th><th>Hết hạn</th><th>Trạng thái</th><th></th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>© 2025 Sports Shop — <a href="policy-contact.html">Chính sách & Liên hệ</a></footer>
+
+  <script src="assets/app.js"></script>
+  <script>
+    // ======= local helpers =======
+    const qs=(s,r=document)=>r.querySelector(s), qsa=(s,r=document)=>[...r.querySelectorAll(s)];
+    const get=(k,fb)=>{try{const v=localStorage.getItem(k);return v?JSON.parse(v):fb}catch{return fb}};
+    const set=(k,v)=>localStorage.setItem(k,JSON.stringify(v));
+    const money=n=>(Number(n)||0).toLocaleString('vi-VN')+'đ';
+
+    // ======= Tabs (Sản phẩm / Đơn hàng / Mã giảm giá) =======
+    qsa('.tab').forEach(b=>{
+      b.addEventListener('click',()=>{
+        qsa('.tab').forEach(x=>x.classList.remove('active'));
+        b.classList.add('active');
+        const name=b.dataset.tab;
+        qsa('main section').forEach(s=>s.classList.add('hidden'));
+        qs('#tab-'+name).classList.remove('hidden');
+      });
+    });
+
+    // ======= PRODUCTS =======
+    function loadProducts(){ return get('admin_products', []); }
+    function saveProducts(list){ set('admin_products', list); renderProducts(); }
+
+    function renderProducts(){
+      const tb = qs('#prodTable tbody'); tb.innerHTML='';
+      const list = loadProducts();
+      list.forEach((p,idx)=>{
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>#${idx+1}</td>
+          <td>${p.name}</td>
+          <td>${money(p.price)}</td>
+          <td><span class="chip">${p.category}</span></td>
+          <td>${p.stock||0}</td>
+          <td class="actions">
+            <button class="ghost small" data-act="edit" data-idx="${idx}">Sửa</button>
+            <button class="ghost small" data-act="del" data-idx="${idx}">Xóa</button>
+          </td>`;
+        tb.appendChild(tr);
+      });
+    }
+
+    qs('#prodForm').addEventListener('submit', e=>{
+      e.preventDefault();
+      const f = e.target;
+      const data = {
+        name: f.name.value.trim(),
+        price: Number(f.price.value||0),
+        category: f.category.value,
+        stock: Number(f.stock.value||0),
+        img: f.img.value.trim()
+      };
+      const idx = Number(f.editingIndex.value||-1);
+      const list = loadProducts();
+      if (idx>=0){ list[idx]=data; qs('#btnSaveProd').textContent='Lưu sản phẩm'; }
+      else list.push(data);
+      f.reset(); f.editingIndex.value=-1;
+      saveProducts(list);
+    });
+
+    qs('#prodTable').addEventListener('click', e=>{
+      const btn = e.target.closest('button'); if(!btn) return;
+      const idx = Number(btn.dataset.idx);
+      const list = loadProducts();
+      if (btn.dataset.act==='edit'){
+        const p = list[idx], f = qs('#prodForm');
+        f.name.value=p.name; f.price.value=p.price; f.category.value=p.category;
+        f.stock.value=p.stock||0; f.img.value=p.img||''; f.editingIndex.value=idx;
+        qs('#btnSaveProd').textContent='Cập nhật';
+        window.scrollTo({top:0, behavior:'smooth'});
+      } else if (btn.dataset.act==='del'){
+        if(confirm('Xóa sản phẩm này?')){ list.splice(idx,1); saveProducts(list); }
+      }
+    });
+
+    // ======= ORDERS (đọc từ localStorage 'orders') =======
+    function renderOrders(){
+      const tb = qs('#orderTable tbody'); tb.innerHTML='';
+      const orders = get('orders', []); // {id,date,customer,total,status}
+      orders.forEach(o=>{
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>${o.id}</td><td>${o.date}</td><td>${o.customer||'-'}</td>
+                        <td>${money(o.total||0)}</td><td>${o.status||'pending'}</td>`;
+        tb.appendChild(tr);
+      });
+    }
+
+    // ======= COUPONS =======
+    function loadCoupons(){ return get('coupons', []); }
+    function saveCoupons(list){ set('coupons', list); renderCoupons(); }
+
+    function renderCoupons(){
+      const tb = qs('#couponTable tbody'); tb.innerHTML='';
+      loadCoupons().forEach((c,idx)=>{
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>${c.code}</td>
+          <td>${c.type==='percent'?'%':'đ'}</td>
+          <td>${c.type==='percent'? (c.value+'%'): money(c.value)}</td>
+          <td>${c.min?money(c.min):'-'}</td>
+          <td>${c.expire||'-'}</td>
+          <td>${c.active?'Đang bật':'Tắt'}</td>
+          <td class="actions">
+            <button class="ghost small" data-cact="edit" data-idx="${idx}">Sửa</button>
+            <button class="ghost small" data-cact="toggle" data-idx="${idx}">${c.active?'Tắt':'Bật'}</button>
+            <button class="ghost small" data-cact="del" data-idx="${idx}">Xóa</button>
+          </td>`;
+        tb.appendChild(tr);
+      });
+    }
+
+    qs('#couponForm').addEventListener('submit', e=>{
+      e.preventDefault();
+      const f=e.target;
+      const data={
+        code:f.code.value.trim().toUpperCase(),
+        type:f.type.value,
+        value:Number(f.value.value||0),
+        min:Number(f.min.value||0),
+        expire:f.expire.value||'',
+        active:f.active.value==='true'
+      };
+      const idx=Number(f.editingIndex.value||-1);
+      const list=loadCoupons();
+      if(idx>=0){ list[idx]=data; qs('#btnSaveCoupon').textContent='Lưu mã'; }
+      else list.push(data);
+      f.reset(); f.editingIndex.value=-1;
+      saveCoupons(list);
+    });
+
+    qs('#couponTable').addEventListener('click', e=>{
+      const b=e.target.closest('button'); if(!b) return;
+      const idx=Number(b.dataset.idx);
+      const list=loadCoupons();
+      if(b.dataset.cact==='edit'){
+        const c=list[idx], f=qs('#couponForm');
+        f.code.value=c.code; f.type.value=c.type; f.value.value=c.value;
+        f.min.value=c.min||0; f.expire.value=c.expire||''; f.active.value=c.active?'true':'false';
+        f.editingIndex.value=idx; qs('#btnSaveCoupon').textContent='Cập nhật';
+        window.scrollTo({top:0,behavior:'smooth'});
+      } else if(b.dataset.cact==='toggle'){
+        list[idx].active=!list[idx].active; saveCoupons(list);
+      } else if(b.dataset.cact==='del'){
+        if(confirm('Xóa mã này?')){ list.splice(idx,1); saveCoupons(list); }
+      }
+    });
+
+    // ======= Init =======
+    document.addEventListener('DOMContentLoaded', ()=>{
+      // nếu demo chưa có sp: seed
+      if(!localStorage.getItem('admin_products')){
+        set('admin_products',[
+          {name:'Giày chạy 5K',price:990000,category:'running',stock:20,img:''},
+          {name:'Áo Jersey Chicago',price:790000,category:'basketball',stock:15,img:''},
+        ]);
+      }
+      renderProducts();
+      renderOrders();
+      renderCoupons();
+    });
+  </script>
+</body>
+</html>
